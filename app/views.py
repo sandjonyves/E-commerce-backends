@@ -32,7 +32,7 @@ class ReadMarque(viewsets.ReadOnlyModelViewSet):
         #retournement sous forme de Json
         return JsonResponse(data,safe=False)
     
-    @action(detail=False,methods=['get'],url_path="get_data/(?P<id>\w+)")
+    @action(detail=False,methods=['get'],url_path="search/(?P<id>\w+)")
     def perform_get_data(self,request,id):
         #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
         queryset = Voiture.objects.filter(id_modele__id_marque_id = id)

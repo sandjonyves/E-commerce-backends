@@ -14,14 +14,14 @@ class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
-    # def validate(self, attrs):
-    #     username = attrs.get('username')
-    #     password = attrs.get('password')
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
 
-    #     user = authenticate(username=username, password=password)
+        user = authenticate(username=username, password=password)
 
-    #     if not user:
-    #         raise serializers.ValidationError('Unable to authenticate with provided credentials.')
+        if not user:
+            raise serializers.ValidationError('Unable to authenticate with provided credentials.')
 
-    #     attrs['user'] = user
-    #     return attrs
+        attrs['user'] = user
+        return attrs

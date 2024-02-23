@@ -6,11 +6,30 @@ from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.db import IntegrityError
-from rest_framework import generics
+from rest_framework import generics,viewsets
 from rest_framework.exceptions import AuthenticationFailed
 # Create your views here.
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import JsonResponse
+from rest_framework import status
 #classe permetant de creer un client
+
+class TestREgister(viewsets.ModelViewSet):
+    serializer_class = ClientSerializer
+    queryset = Client.objects.all()
+
+
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        user = Client.objects.create_user(
+            username=request.data['username'],
+            password=request.data['password'],
+            email=request.data['email'],
+
+        )
+        # user = dict(user)
+        return Response(JsonResponse(request.data,safe=False)
+                        ,status= status.HTTP_200_OK)
 
 class ClientRegister(generics.CreateAPIView):
     authentication_classes=[

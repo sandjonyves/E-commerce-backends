@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from django.http import JsonResponse
 from .models import *
@@ -19,21 +20,21 @@ class VoitureViewSet(viewsets.ModelViewSet):
     queryset = Voiture.objects.all()
     serializer_class = VoitureSerializer
 
-class ReadMarque(viewsets.ReadOnlyModelViewSet):
+class ReadMarque(APIView):
     # queryset = Voiture.objects.all()
     # serializer_class = VoitureSerializer
     #affichage de tous les marques des voitures 
-    @action(detail=False,methods=['get'],url_path='get_marque')
-    def get_marque(self,rquest):
-        #recuperation de tout les marques 
-        query = Marque.objects.all()
-        #tranformation des donnees  sous formes de liste
-        data = list(query.values('id','name'))
-        #retournement sous forme de Json
-        return JsonResponse(data,safe=False)
+    # @action(detail=False,methods=['get'],url_path='get_marque')
+    # def get_marque(self,rquest):
+    #     #recuperation de tout les marques 
+    #     query = Marque.objects.all()
+    #     #tranformation des donnees  sous formes de liste
+    #     data = list(query.values('id','name'))
+    #     #retournement sous forme de Json
+    #     return JsonResponse(data,safe=False)
     
-    @action(detail=False,methods=['get'],url_path="search/(?P<id>\w+)")
-    def perform_get_data(self,request,id):
+    # @action(detail=False,methods=['get'],url_path="search/(?P<id>\w+)")
+    def get(self,request,id):
         #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
         queryset = Voiture.objects.filter(id_modele__id_marque_id = id)
         #transformation sous forme de liste et renommager de certains champs

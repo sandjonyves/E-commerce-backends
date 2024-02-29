@@ -9,6 +9,6 @@ route.register('voiture',VoitureViewSet ,basename='voiture')
 
 urlpatterns =[
     path('',include(route.urls)),
-    path('search/<id>/',ReadMarque.as_view({"get":"perform_get_data"}),)
+    path('search/<id>/', ReadMarque.as_view(), name='read_marque'),
 
 ]

@@ -5,23 +5,35 @@ from django.contrib.auth import authenticate,get_user_model
 
 #serializeur du client
 class ClientSerializer(serializers.ModelSerializer):
- 
     class Meta:
         model = Client
         fields = ('__all__')
+
+
+class MarchantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Marchand
+        fields = ('__all__')
+
+
+class AdmintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Admin
+        fields = ('__all__')
+
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
-    def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
+    # def validate(self, attrs):
+    #     username = attrs.get('username')
+    #     password = attrs.get('password')
 
-        user = authenticate(username=username, password=password)
+    #     user = authenticate(username=username, password=password)
 
-        if not user:
-            raise serializers.ValidationError('Unable to authenticate with provided credentials.')
+    #     if not user:
+    #         raise serializers.ValidationError('Unable to authenticate with provided credentials.')
 
-        attrs['user'] = user
-        return attrs
+    #     attrs['user'] = user
+    #     return attrs

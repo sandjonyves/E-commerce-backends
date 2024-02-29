@@ -7,3 +7,4 @@
 -   Install dependencies `pip install -r requirements.txt`
 -   Run the application `python manage.py runserver`
 
+# e-commerce-backend

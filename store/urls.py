@@ -5,6 +5,7 @@ from .views import *
 router =  routers.SimpleRouter()
 router.register('piece',PierceViewSet)
 router.register('cathegorie',cathegorieViewSet)
+router.register('commande',CommandeViewSet,basename='commande')
 urlpatterns=[
     # path('admin/', admin.site.urls),
     # path('auth/',include('rest_framework.urls')),

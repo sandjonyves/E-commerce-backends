@@ -3,8 +3,11 @@
 
 -   Clone the repository `git clone <project url>`
 -   Create a virtual environment `python -m venv env`
--   Activate the virtual environment `source env/bin/activate`
+-   Activate the virtual environment (linux) `source env/bin/activate`
+                                      (windows) `cd env/scripts && ./activate.ps1`
 -   Install dependencies `pip install -r requirements.txt`
+-   
 -   Run the application `python manage.py runserver`
+-   write this urls in your browser `http://127.0.0.1:8000/docs`
 
 # e-commerce-backend

@@ -31,8 +31,17 @@ class cathegorieViewSet(viewsets.ModelViewSet):
     #     data = list(queryset.values())
     #     return JsonResponse(data,safe=False)
        
+class CommandeViewSet(viewsets.ModelViewSet):
+    serializer_class = CommandeSerializer
+    queryset = Commande.objects.all()
 
 
+# class commandeApiViews(generics.CreateAPIView):
+#     serializer_class = CommandeSerializer
+   
+#     def post(self,request):
+
+        
 
 
 class TestView(generics.UpdateAPIView):
@@ -48,7 +57,6 @@ class TestView(generics.UpdateAPIView):
 class lists(generics.ListAPIView):
     queryset = Piece.objects.all()
     serializer_class = PieceSerializer
-
 
 
 

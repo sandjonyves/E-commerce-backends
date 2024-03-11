@@ -12,7 +12,7 @@ class ModeleSrializer(serializers.ModelSerializer):
         model= Modele
         fields = '__all__'
 
-class VoitureSerializer(serializers.ModelSerializer):
-    class Meta:
-        model  = Voiture
-        fields = '__all__'
+# class VoitureSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model  = Voiture
+#         fields = '__all__'

@@ -2,7 +2,8 @@
 
 
 -   Clone the repository `git clone <project url>`
--   Create a virtual environment `python -m venv env`
+-   use this python version `python3.10`
+-   Create a virtual environment `python3.10 -m venv env`
 -   Activate the virtual environment (linux) `source env/bin/activate`
                                       (windows) `cd env/scripts && ./activate.ps1`
 -   Install dependencies `pip install -r requirements.txt`

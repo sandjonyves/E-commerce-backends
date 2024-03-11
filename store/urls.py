@@ -13,6 +13,7 @@ urlpatterns=[
    
     # path('test2/<int:pk>/',PierceViewSet.as_view({'patch':'update'})),
     path('',include(router.urls)),
+    path('seach-modelCathegori/<id>/',SearchModelCathegorie.as_view(),name='seach-modelCathegori')
 
     # path('get_cathegorie/<int:id>',cathegorieViewSet.as_view({'get':'get_cathegorie'})),
     # path('get_piece/<int:id>',PierceViewSet.as_view({'get':'get_piece'}))

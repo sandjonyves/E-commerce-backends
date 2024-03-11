@@ -4,4 +4,3 @@ from .models import *
 
 admin.site.register(Marque)
 admin.site.register(Modele)
-admin.site.register(Voiture)

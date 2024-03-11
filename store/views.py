@@ -1,19 +1,26 @@
 from django.shortcuts import render
-from .serializers import *
-from .models import *
+from django.http.response import JsonResponse
+
 from rest_framework import viewsets,response
 from rest_framework.decorators import action
 from rest_framework import generics
-from rest_framework.decorators import api_view,action
-# Create your views here.
+from rest_framework.decorators import api_view,action,permission_classes
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from django.http.response import JsonResponse
+from rest_framework.permissions import IsAdminUser
+
+
+from .serializers import *
+from .models import *
 
 
 class PierceViewSet(viewsets.ModelViewSet):
     queryset = Piece.objects.all()
     serializer_class = PieceSerializer
+    @permission_classes([IsAdminUser])
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
     # @action(detail = False,methods=['get'],url_path = 'get_piece/(?P<id>\w+)')
     # def get_piece(self,request,id):
     #     queryset = Piece.objects.filter(id_cathegorie=id)
@@ -40,16 +47,6 @@ class CommandeViewSet(viewsets.ModelViewSet):
 #     serializer_class = CommandeSerializer
    
 #     def post(self,request):
-
-        
-
-
-class TestView(generics.UpdateAPIView):
-    queryset = Piece.objects.all()
-    serializer_class = PieceSerializer
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
 
     # def perform_update(self, serializer):
 
@@ -81,3 +78,12 @@ class lists(generics.ListAPIView):
 # @api_view(['PUT'])
 # def batiment_edit(request,pk):
 #     return update(request=request, pk=pk, obj=Piece, obj_serializer=PieceSerializer)
+    
+
+class SearchModelCathegorie(APIView):
+    def get(self,request,id):
+
+        queryset = Cathegorie.objects.filter(id_modele=id)
+        data = list(queryset.values())
+        
+        return JsonResponse(data,safe=False)

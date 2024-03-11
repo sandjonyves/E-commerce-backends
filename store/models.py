@@ -4,9 +4,9 @@ from app.models import  *
 # Create your models here.
 
 class Cathegorie(models.Model):
-    name_Cathegorie = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     image = models.ImageField(upload_to='Cathegorie/images/',null=True)
-    id_voiture= models.ForeignKey(Voiture,on_delete=models.CASCADE,default=""
+    id_modele= models.ForeignKey(Modele,on_delete=models.CASCADE,default="" 
                                  )
     
 

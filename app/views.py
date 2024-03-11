@@ -1,26 +1,44 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from django.http import JsonResponse
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import permission_classes
+from rest_framework_simplejwt import authentication
 from .models import *
 from .serializer import *
 from django.db.models import F
 # Create your views here.
 
 class MarqueViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [AllowAny]
     queryset = Marque.objects.all()
     serializer_class= MarqueSerializer
 
+
 class ModeleViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [AllowAny]
     queryset = Modele.objects.all()
     serializer_class= ModeleSrializer
 
-class VoitureViewSet(viewsets.ModelViewSet):
-    queryset = Voiture.objects.all()
-    serializer_class = VoitureSerializer
+# class VoitureViewSet(viewsets.ModelViewSet):
+#     queryset = Voiture.objects.all()
+#     serializer_class = VoitureSerializer
 
-class ReadMarque(APIView):
+
+class SearchModeleMarque(APIView):
+    @permission_classes([AllowAny])
+    def get(self,request,id):
+        #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
+        queryset = Modele.objects.filter(id_marque__id = id)
+        #transformation sous forme de liste et renommager de certains champs
+        data  = list(queryset.values('id','name',marque_name =  F('id_marque__name')))
+        #retour des donnees  sous forme de Json
+        return JsonResponse(data,safe=False)
     # queryset = Voiture.objects.all()
     # serializer_class = VoitureSerializer
     #affichage de tous les marques des voitures 
@@ -34,11 +52,5 @@ class ReadMarque(APIView):
     #     return JsonResponse(data,safe=False)
     
     # @action(detail=False,methods=['get'],url_path="search/(?P<id>\w+)")
-    def get(self,request,id):
-        #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
-        queryset = Voiture.objects.filter(id_modele__id_marque_id = id)
-        #transformation sous forme de liste et renommager de certains champs
-        data  = list(queryset.values('id','name','id_modele',modele_nama =  F('id_modele__name'),marque_name =  F('id_modele__id_marque__name')))
-        #retournement sous forme de Json
-        return JsonResponse(data,safe=False)
+
 

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'account',
+   
     'app',
     'store',
 
@@ -154,14 +155,16 @@ REST_FRAMEWORK = {
                                         #  'rest_framework.authentication.TokenAuthentication',
     
     ),
-    'DEAULT_PERMISSION_CLASSES':[
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-        
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ]
     
 }
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
+AUTH_USER_MODEL = 'account.CustomUser'
 
-AUTH_USER_MODEL="account.Client"
+# AUTH_USER_MODEL = 'account.Marchand'
+
+# AUTH_USER_MODEL = 'account.Admin'

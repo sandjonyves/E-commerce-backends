@@ -27,92 +27,95 @@ from rest_framework.authentication import TokenAuthentication
     
 
 class ClientRegister(viewsets.ModelViewSet):
-    serializer_class = ClientSerializer
-    queryset = CustomUser.objects.all()
-    #definition des permissions 
-    permission_classes = [AllowAny]
+    pass
+    # serializer_class = ClientSerializer
+    # queryset = CustomUser.objects.all()
+    # #definition des permissions 
+    # permission_classes = [AllowAny]
 
-    def create(self, request, *args, **kwargs):
-        print(request.data)
-        user=CustomUser.objects.create_user(
-            username=request.data['username'],
-            password=request.data['password'],
-            email=request.data['email'],
-        )
-        if user is not None :
-        # user = dict(user)
-            return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)
+    #     user=CustomUser.objects.create_user(
+    #         username=request.data['username'],
+    #         password=request.data['password'],
+    #         email=request.data['email'],
+    #     )
+    #     if user is not None :
+    #     # user = dict(user)
+    #         return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
 
-        client = Client.objects.create(
-            user = user,
-            role='client'
+    #     client = Client.objects.create(
+    #         user = user,
+    #         role='client'
            
-        )
+    #     )
         
-        # user = dict(user)
-        if client is not None :
-        # user = dict(user)
-            return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
-        return Response('succes register user',status=status.HTTP_200_OK)
+    #     # user = dict(user)
+    #     if client is not None :
+    #     # user = dict(user)
+    #         return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
+    #     return Response('succes register user',status=status.HTTP_200_OK)
         
              
 
 class MarchantREgister(viewsets.ModelViewSet):
-    authentication_classes = [authentication.JWTAuthentication] 
+    pass
+    # authentication_classes = [authentication.JWTAuthentication] 
 
-    permission_classes = [IsAdminUser]
-    serializer_class = MarchantSerializer
-    queryset = Marchand.objects.all()
+    # permission_classes = [IsAdminUser]
+    # serializer_class = MarchantSerializer
+    # queryset = Marchand.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        print(request.data)  
-        is_staff = request.data.get('is_staff', True)
-        user=CustomUser.objects.create_user(
-            username=request.data['username'],
-            password=request.data['password'],
-            email=request.data['email'],
-            is_staff = is_staff
-        )
-        if user is not None :
-        # user = dict(user)
-            return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)  
+    #     is_staff = request.data.get('is_staff', True)
+    #     user=CustomUser.objects.create_user(
+    #         username=request.data['username'],
+    #         password=request.data['password'],
+    #         email=request.data['email'],
+    #         is_staff = is_staff
+    #     )
+    #     if user is not None :
+    #     # user = dict(user)
+    #         return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
 
-        marchand = Marchand.objects.create_user(
-            user = user,
-            role='marchand'
+    #     marchand = Marchand.objects.create_user(
+    #         user = user,
+    #         role='marchand'
            
-        )
+    #     )
         
-        # user = dict(user)
-        if marchand is not None :
-        # user = dict(user)
-            return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
-        return Response('succes register user',status=status.HTTP_200_OK)
+    #     # user = dict(user)
+    #     if marchand is not None :
+    #     # user = dict(user)
+    #         return Response('user cant not register ',status=status.HTTP_400_BAD_REQUEST)
+    #     return Response('succes register user',status=status.HTTP_200_OK)
         
              
 
 class AdminREgister(viewsets.ModelViewSet):
+    pass
 
-    permission_classes = [AllowAny]
-    serializer_class = AdminSerializer
-    queryset = CustomUser.objects.all()
+    # permission_classes = [AllowAny]
+    # serializer_class = AdminSerializer
+    # queryset = CustomUser.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
 
-        user = CustomUser.objects.create_superuser(
-            username=serializer.validated_data['username'],
-            password=serializer.validated_data['password'],
-            email=serializer.validated_data['email']
-        )
+    #     user = CustomUser.objects.create_superuser(
+    #         username=serializer.validated_data['username'],
+    #         password=serializer.validated_data['password'],
+    #         email=serializer.validated_data['email']
+    #     )
 
-        admin = Admin.objects.create(user=user, role='admin')
+    #     admin = Admin.objects.create(user=user, role='admin')
 
-        if admin is  None:
-            return Response('Failed to register user.', status=status.HTTP_400_BAD_REQUEST)
+    #     if admin is  None:
+    #         return Response('Failed to register user.', status=status.HTTP_400_BAD_REQUEST)
 
-        return Response('Successfully registered user.', status=status.HTTP_200_OK)
+    #     return Response('Successfully registered user.', status=status.HTTP_200_OK)
                     
 
 
@@ -120,43 +123,44 @@ class AdminREgister(viewsets.ModelViewSet):
 # 
 
 class UserLogin(APIView):
+    pass
 
-    serializer_class=UserLoginSerializer
+    # serializer_class=UserLoginSerializer
     
-    permission_classes=[AllowAny]
+    # permission_classes=[AllowAny]
 
-    def post(self,request):
-        username = request.data['username']
-        password = request.data['password']
-        # print(111111111111111111111111111111111111111111111111)
-        # user = Client.objects.filter(username=username).first()
-        # if not user:
-        #     user =Marchand.objects.filter(username=username).first()
-        #     if not user:
-        #         user =Admin.objects.filter(username=username).first()
-        #         if not user:
-        #             raise AuthenticationFailed('user not found') 
-        # if user.check_password(password):
-        #     if not user.is_active:
-        #         raise ValueError("User account is not active")
-        # print(111111111111111111111111111111111111111111111111)
-        user = authenticate(username=username, password=password)
-        print(111111111111111111111111111111111111111111111113)
-        if not user:
-            raise serializers.ValidationError('data is not valid')
-        if not user.is_active:
-            raise serializers.ValidationError('user is not activated ')
-        print(111111111111111111111111111111111111111111111111)
-        # login(request,user)
-        token = RefreshToken.for_user(user)
-        # token['is_activate']=user.is_active
-        # token['is_staff']=user.is_staff
-        # token['is_superuser']=user.is_superuser
+    # def post(self,request):
+    #     username = request.data['username']
+    #     password = request.data['password']
+    #     # print(111111111111111111111111111111111111111111111111)
+    #     # user = Client.objects.filter(username=username).first()
+    #     # if not user:
+    #     #     user =Marchand.objects.filter(username=username).first()
+    #     #     if not user:
+    #     #         user =Admin.objects.filter(username=username).first()
+    #     #         if not user:
+    #     #             raise AuthenticationFailed('user not found') 
+    #     # if user.check_password(password):
+    #     #     if not user.is_active:
+    #     #         raise ValueError("User account is not active")
+    #     # print(111111111111111111111111111111111111111111111111)
+    #     user = authenticate(username=username, password=password)
+     
+    #     if not user:
+    #         raise serializers.ValidationError('data is not valid')
+    #     if not user.is_active:
+    #         raise serializers.ValidationError('user is not activated ')
+       
+    #     # login(request,user)
+    #     token = RefreshToken.for_user(user)
+    #     # token['is_activate']=user.is_active
+    #     # token['is_staff']=user.is_staff
+    #     # token['is_superuser']=user.is_superuser
 
-        return Response({
-            'refresh': str(token),
-            'access': str(token.access_token)
-        }, status=status.HTTP_200_OK)
+    #     return Response({
+    #         'refresh': str(token),
+    #         'access': str(token.access_token)
+    #     }, status=status.HTTP_200_OK)
 
 
     # def post(self, request, *args, **kwargs):

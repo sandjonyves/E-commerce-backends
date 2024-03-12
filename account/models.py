@@ -2,7 +2,8 @@ from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,UserManager,User,AbstractUser
 from django.utils import timezone
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -86,36 +87,45 @@ from django.utils import timezone
 #         return True
 
 class CustomUser(AbstractUser):
-    class Role(models.TextChoices):
-        ADMIN  = "admin",
-        CLIENT = "client",
-        MARCHAND='marchand'
-    base_role = Role.ADMIN
+    phone_number = models.CharField(max_length=32,null =True)
 
-    role = models.CharField(max_length=32,choices=Role.choices)
+    # USERNAME_FIELD = 'email'
+    # class Role(models.TextChoices):
+    #     ADMIN    = " ADMIN"   ,  "admin",
+    #     CLIENT   = "CLIENT"   ,   "client",
+    #     MARCHAND =  "MARCHAND",  'marchand'
+    # base_role = Role.ADMIN
 
-    def save(self,*args,**kwargs):
-        self.role = self.base_role
-        return super().save(*args,**kwargs)
+    # role = models.CharField(max_length=32,choices=Role.choices)
+
+    # def save(self,*args,**kwargs):
+    #     self.role = self.base_role
+    #     return super().save(*args,**kwargs)
 
 #table des clients
-class Client(CustomUser):
+class Client(models.Model):
+  user=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     # user = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name='client')
-    base_role = CustomUser.Role.CLIENT
+    # base_role = CustomUser.Role.CLIENT
 
 #table des marchands
-class Marchand(CustomUser):
+class Marchand(models.Model):
+  user=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     # user = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name = 'marchand')
-    base_role = CustomUser.Role.MARCHAND
+    # base_role = CustomUser.Role.MARCHAND
 
 
 
+# @receiver(post_save, sender=CustomUser)
+# def create_user_profile(sender, instance, created, **kwargs):
+#         if created:
+#             print(instance)
+#             Admin.objects.create(user=instance)
 
 
 #table des administarteurs 
 class Admin(models.Model):
-    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-
+  user=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
 
 
 

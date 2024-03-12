@@ -7,14 +7,34 @@ from django.contrib.auth import get_user_model
 
 #serializeur du client
 class ClientSerializer(serializers.ModelSerializer):
+    user_type = serializers.IntegerField(write_only = True)
     class Meta:
         model =CustomUser
-        fields = ('__all__')
+        fields = ('username','email','password','is_staff','user_type')
     def create(self, validated_data):
-        user = CustomUser.objects.create_user(**validated_data)
-        client = Client.objects.create(user=user,role='client')
+        
+        user_type=validated_data.pop('user_type')
+   
+        # is_staff = validated_data.pop('is_staff')
+        # is_staff = True
+        # is_superuser = data.get('is_superuser',True)
+        # if int(user_type) == 1:
+        #     print(111111111111111111111111)
+        #     # user_type = data.pop('user_type')
+ 
+        #     print(111111111111111111111111)
+        #     # validated_data.append({'is_staff':True})
+        #     user = CustomUser.objects.create_superuser(validated_data
 
-        return user
+        #     )
+
+  
+        #     admin= Admin.objects.create_superuser(**validated_data
+        
+        # )
+
+
+        return super().create(**validated_data)
 
 
 class MarchantSerializer(serializers.ModelSerializer):
@@ -25,7 +45,7 @@ class MarchantSerializer(serializers.ModelSerializer):
 
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
+        model = Admin
         fields = ('__all__')
 
 

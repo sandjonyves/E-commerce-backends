@@ -1,41 +1,60 @@
-from rest_framework import serializers
-from .models import *
-from django.contrib.auth import authenticate,get_user_model,login
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from django.contrib.auth import get_user_model
-# CustomUser = get_user_model()
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate,get_user_model,login
+from django.contrib.auth.models import Permission,Group
 
+from rest_framework import serializers
+from rest_framework import status
+
+from .permissions import group_permissionOfcathegorie_piece 
+from .models import *
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 #serializeur du client
-class ClientSerializer(serializers.ModelSerializer):
-    user_type = serializers.IntegerField(write_only = True)
-    class Meta:
-        model =CustomUser
-        fields = ('username','email','password','is_staff','user_type')
+class UserSerializer(serializers.ModelSerializer):
+    # user_type = serializers.IntegerField(write_only = True)
     def create(self, validated_data):
-        
-        user_type=validated_data.pop('user_type')
-   
-        # is_staff = validated_data.pop('is_staff')
-        # is_staff = True
-        # is_superuser = data.get('is_superuser',True)
-        # if int(user_type) == 1:
-        #     print(111111111111111111111111)
-        #     # user_type = data.pop('user_type')
- 
-        #     print(111111111111111111111111)
-        #     # validated_data.append({'is_staff':True})
-        #     user = CustomUser.objects.create_superuser(validated_data
+        """
+        Create and save a new user with the given validated data.
+        """
+        role = validated_data.pop('role')
+        password = validated_data.pop('password')
 
-        #     )
+        if role == CustomUser.Role.ADMIN:
+            user = Admin.objects.create(
+                # The password must be hashed before saving it to the database.
+                password=make_password(password),
+                is_staff=True,
+                is_superuser=True,
+                **validated_data
+            )
+            if user is None:
+                raise ValueError('Unable to create user.')
 
-  
-        #     admin= Admin.objects.create_superuser(**validated_data
-        
-        # )
+        elif role == CustomUser.Role.MARCHAND:
+            user = Marchand.objects.create(
+                password=make_password(password),
+                is_staff=True,
+                **validated_data
+            )
+            if user is None:
+                raise ValueError('Unable to create user.')
+            try:
+                group = Group.objects.get(name='marchandGourpPermission')
+            except Group.DoesNotExist:
+                group = group_permissionOfcathegorie_piece()
+            user.groups.add(group)
 
+        else:
+            user = Client.objects.create(
+                password=make_password(password),
+                **validated_data
+            )
+            if user is None:
+                raise ValueError('Unable to create user.')
 
-        return super().create(**validated_data)
-
+        return user
 
 class MarchantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,10 +67,18 @@ class AdminSerializer(serializers.ModelSerializer):
         model = Admin
         fields = ('__all__')
 
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ('__all__')
 
 class UserLoginSerializer(TokenObtainPairSerializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
+
+
+
 
     # def validate(self, request):
     #     print(request)

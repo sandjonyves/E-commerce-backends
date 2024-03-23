@@ -1,131 +1,79 @@
-from typing import Any
+from typing import Any, Iterable
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser,UserManager,User,AbstractUser
+from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-# Create your models here.
 
-# class CustomUserManager(UserManager):
-#     def create_user(self, username, password, **extra_fields: Any) -> Any:
-
-#         # if not email:
-#         #     raise ValueError("email must be specified")
-
-#         if not username:
-#             raise ValueError('the username is required ')
-        
-#         #normalisation de email 
-#         # email = self.normalize_email(email)
-#         user = self.model(username=username,
-#                         #    email=email,
-#                             **extra_fields)
-#         #hachage du mot de passe 
-#         user.set_password(password)
-#         user.save(using=self._db)
-#     def create_superuser(self,username,password,**extre_fields):
-#         extre_fields.setdefault('is_staff' ,True)
-#         extre_fields.setdefault('is_superuser',True)
-
-#         return self.create_user(username,password,**extre_fields)
-
-# class CustomUser(AbstractBaseUser):
-#     username = models.CharField(max_length = 127,unique = True)
-#     email = models.CharField(max_length =255)
-#     password = models.CharField(max_length =255)
-#     phone_number = models.CharField(max_length=127)
-#     is_active =models.BooleanField(default = True)
-#     is_staff = models.BooleanField(default = False)
-#     is_superuser = models.BooleanField(default = False)
-  
-#     last_login = models.DateTimeField(
-#         ("last login"),
-#         default=timezone.now,
-#         help_text=("Date and time when this user last logged in."),
-#     )
-#     date_joined = models.DateTimeField(
-#         ("date joined"),
-#         default=timezone.now,
-#         help_text=("Date and time when this user joined."),
-#     )
-
-#     objects =CustomUserManager()
-
-#     USERNAME_FIELD = "username"
-#     # EMAIL_FIELD = "email"
-#     REQUIRED_FIELDS = []
-
-#     # class Meta:
-#     #     abstract = True
-
-#     def get_full_name(self):
-#         return self.username
-
-#     def get_short_name(self):
-#         return self.username
-    
-#     def has_perm(self,perm,obj=None):
-#         "L'utilisateur a-t-il une autorisation spécifique ?"
-
-#         return True
-    
-#     def has_module_perms(self,app_label):
-#         "L'utilisateur dispose-t-il des autorisations nécessaires pour voir l'application ?`app_label`?"
-
-#         return True
-#     def has_perms(self, perm_list, obj=None):
-#         """
-#             Return True if the user has each of the specified permissions. If
-#             object is passed, check if the user has all required perms for it.
-#         """
-   
-#         return True
-
-
-#     def has_parm():
-#         return True
 
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=32,null =True)
 
-    # USERNAME_FIELD = 'email'
-    # class Role(models.TextChoices):
-    #     ADMIN    = " ADMIN"   ,  "admin",
-    #     CLIENT   = "CLIENT"   ,   "client",
-    #     MARCHAND =  "MARCHAND",  'marchand'
-    # base_role = Role.ADMIN
+    class Role(models.TextChoices):
+       CLIENT = "CLIENT","client"
+       MARCHAND = "MARCHAND","marchand"
+       ADMIN = "ADMIN","admin"
+    role = models.CharField( max_length=32,choices =Role.choices,default="")
+    
+   #  REQUIRED_FIELDS =['first_name','last_name']
+   #  USERNAME_FIELD = 'email'
+   #  EMAIL_FIELD = 'email'
 
-    # role = models.CharField(max_length=32,choices=Role.choices)
 
-    # def save(self,*args,**kwargs):
-    #     self.role = self.base_role
-    #     return super().save(*args,**kwargs)
 
+class ClientManager(models.Manager):
+   def get_queryset(self,*arg,**kwargs) -> models.QuerySet:
+      return super().get_queryset(*arg,**kwargs).filter(role=CustomUser.Role.CLIENT)    
 #table des clients
-class Client(models.Model):
-  user=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+class Client(CustomUser):
+  objects = ClientManager()
+  class Meta:
+     proxy = True
+  def save(self,*args,**kwargs) -> None:
+      if not self.pk:
+        self.role = CustomUser.Role.CLIENT
+      return super().save(*args,**kwargs)
+
     # user = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name='client')
     # base_role = CustomUser.Role.CLIENT
 
+#class de management pour filtre les marchand
+class MarchandManager(models.Manager):
+   def get_queryset(self,*arg,**kwargs) -> models.QuerySet:
+      return super().get_queryset(*arg,**kwargs).filter(role=CustomUser.Role.MARCHAND)    
 #table des marchands
-class Marchand(models.Model):
-  user=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    # user = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name = 'marchand')
-    # base_role = CustomUser.Role.MARCHAND
+class Marchand(CustomUser):
+  objects = MarchandManager()
+
+  class Meta:
+     proxy = True
+  
+  def save(self,*args,**kwargs) -> None:
+      if not self.pk:
+        self.role = CustomUser.Role.MARCHAND
+      return super().save(*args,**kwargs)
 
 
 
-# @receiver(post_save, sender=CustomUser)
-# def create_user_profile(sender, instance, created, **kwargs):
-#         if created:
-#             print(instance)
-#             Admin.objects.create(user=instance)
+#class de management pour filtre les admins
+class AdminManager(models.Manager):
+   def get_queryset(self,*arg,**kwargs) -> models.QuerySet:
+      return super().get_queryset(*arg,**kwargs).filter(role=CustomUser.Role.ADMIN)    
 
 
 #table des administarteurs 
-class Admin(models.Model):
-  user=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+class Admin(CustomUser):
+  objects = AdminManager()
+  class Meta:
+     proxy = True
+
+  def save(self,*args,**kwargs) -> None:
+      if not self.pk:
+        self.role = CustomUser.Role.ADMIN
+      return super().save(*args,**kwargs)
+
+
 
 
 

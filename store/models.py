@@ -1,12 +1,16 @@
 from django.db import models
 import uuid
 from app.models import  *
+from django.dispatch import receiver
+from django.db.models.signals import post_migrate
+from django.contrib.auth.models import Permission,Group
+from account.models import Marchand
 # Create your models here.
 
 class Cathegorie(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(upload_to='Cathegorie/images/',null=True)
-    id_modele= models.ForeignKey(Modele,on_delete=models.CASCADE,default="" 
+    id_modele= models.ManyToManyField(Modele
                                  )
     
 
@@ -33,3 +37,46 @@ class Commande(models.Model):
     Statut = models.BooleanField(default=False)
     piece  = models.ManyToManyField(Piece,default=0,related_name = 'product_commande')
 
+
+
+#this function is use to assign permission can_create_cathegorie  to all Marchand model
+#after  the dabase migrate
+# @receiver(post_migrate)
+# def assign_permissions_cathegorie(sender,**kwargs):
+#     add_marque = Permission.objects.get(codename = 'add_marque')
+#     change_marque = Permission.objects.get(codename='change_marque')
+#     delete_marque = Permission.objects.get(codename='delete_marque')
+
+#     add_modele = Permission.objects.get(codename = 'add_modele')
+#     change_modele = Permission.objects.get(codename='change_modele')
+#     delete_modele = Permission.objects.get(codename='delete_modele')
+
+#     add_cathegorie = Permission.objects.get(codename='add_cathegorie')
+#     change_cathegorie = Permission.objects.get(codename='change_cathegorie')
+#     delete_cathegorie = Permission.objects.get(codename='delete_cathegorie')
+
+#     add_piece = Permission.objects.get(codename='add_piece')
+#     change_piece = Permission.objects.get(codename='change_piece')
+#     delete_piece = Permission.objects.get(codename='delete_piece')
+
+#     create_permission=[
+#         add_marque,
+#         change_marque,
+#         delete_marque,
+
+#         add_modele,
+#         change_modele,
+#         delete_modele,
+
+#         add_cathegorie,
+#         change_cathegorie,
+#         delete_cathegorie,
+
+#         add_piece,
+#         change_piece,
+#         delete_piece,
+#     ]
+
+#     marchand_Gourp_Permissionss =Group(name='marchand_Gourp_Permissionss')
+#     marchand_Gourp_Permissionss.save()
+#     marchand_Gourp_Permissionss.permissions.set(create_permission)

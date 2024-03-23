@@ -31,8 +31,8 @@ class ModeleViewSet(viewsets.ModelViewSet):
 
 
 class SearchModeleMarque(APIView):
-    @permission_classes([AllowAny])
-    def get(self,request,id):
+    @action(detail=False,methods=['get'],url_path='all-modele-of-marque')
+    def get_all_modele_marque(self,request,id):
         #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
         queryset = Modele.objects.filter(id_marque__id = id)
         #transformation sous forme de liste et renommager de certains champs

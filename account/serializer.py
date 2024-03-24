@@ -14,6 +14,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 #serializeur du client
 class UserSerializer(serializers.ModelSerializer):
     # user_type = serializers.IntegerField(write_only = True)
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
     def create(self, validated_data):
         """
         Create and save a new user with the given validated data.

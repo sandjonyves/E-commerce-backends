@@ -1,10 +1,7 @@
 from django.db import transaction
 from django.shortcuts import render
-from django.http import JsonResponse
-from django.db import IntegrityError
-from django.contrib.auth import authenticate ,login,get_user_model,logout
+from django.contrib.auth import authenticate ,login,logout
 
-# CustomUser = get_user_model()
 from .serializer import *
 from.models import *
 
@@ -15,59 +12,113 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated,IsAdminUser
 from rest_framework.decorators import action
 from rest_framework import generics,viewsets,mixins
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken,AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt import authentication
-from rest_framework.authentication import TokenAuthentication
 from app.serializer import *
 #classe permetant de creer un client
 # class MultileSerializersUser:
 
 #     def get_serialier_class(self,request):
 #         if request
-    
+class PersonnalModelViewSet(
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    """
+    A viewset that provides default `create()`, `retrieve()`, `update()`,
+    `partial_update()`, `destroy()` and `list()` actions.
+    """
+    pass
+
+
+ #fonction de creation d'adminintrateur
+def createAdmin(validated_data):
+    return Admin.objects.create(
+        id_admin = True,
+        is_staff = True,
+        **validated_data
+    )
+#fonction de creation d'un marchand
+def createMarchand(validated_data):
+    marchand= Marchand.objects.create(
+        is_staff = True,
+        **validated_data
+    )
+    #get the group permission of marchand
+    # if is none I create a 0new group and add in this marchand
+    try:
+        group = Group.objects.get(name='marchandGourpPermission')
+    except Group.DoesNotExist:
+        group = group_permissionOfcathegorie_piece()
+    marchand.groups.add(group)
+
+    return Marchand
+
+#fontion de creation d'un client 
+def createClient(validated_data):
+    return Client.objects.create(
+        **validated_data
+    )
+
+
+
+
 
 class UserRegister(viewsets.ModelViewSet):
-    
-    # def post(self, request):
-    #     serializer =  UserSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=201)
-    #     return Response(serializer.errors, status=400)
+
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
     queryset = CustomUser.objects.all()
-    #definition des permissions 
-  
+
+    def create(self, request, *args, **kwargs):
+        serializers = self.get_serializer(request.data)
+        #verify if the data request is good 
+        if serializers.is_valid():
+            role = serializers.validated_data.get('role')
+            password = serializers.validated_data.get('password')
+            #hach the passeword of user 
+            serializers.validated_data['password']  =  make_password(password)
+            #create the user 
+            if role == Admin.role.ADMIN:
+                user = createAdmin(serializers.validated_data)
+            elif role == Marchand.role.MARCHAND:
+                user = createMarchand(serializers.validated_data)
+            else:
+                user = createClient(serializers.validated_data)
+            #verifiction if the user have be succesfuli create
+            if user is  None:
+                return Response({'message':'error this user can not create '},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            #return status to 201 if the user have be create succesfuli    
+            return Response({'message':'user create succesfuly'},status=status.HTTP_201_CREATED)
+        
+        else:
+            raise Response("data is not valid ",status=status.HTTP_400_BAD_REQUEST)
 
 
-  
+class MarchandUser(PersonnalModelViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = MarchandSerializer
+    queryset = Marchand.objects.all()
 
-class ReadOnlyUser(generics.RetrieveAPIView):
+class AdminUser(PersonnalModelViewSet):
+    permission_classes = [AllowAny]
     serializer_class = AdminSerializer
-    queryset =Admin.objects.all()
+    queryset = Admin.objects.all()
 
-class readClient(generics.ListAPIView):
-    queryset = Client.objects.all()
+#operation in the client 
+class ClientUser(
+                 PersonnalModelViewSet
+    ):
+    permission_classes = [AllowAny]
     serializer_class = ClientSerializer
-    
-    def get_queryset(self, request):
-        """
-        Return a filtered queryset based on the value of the `id` query parameter.
-        """
-        queryset = super().get_queryset()
-        user_id = request.query_params.get("id")
-        if user_id:
-            queryset = queryset.filter(id=user_id)
-        return queryset
+    queryset = Client.objects.all()
 
+   
 
 class UserLogin(APIView):
     serializer_class=UserLoginSerializer
-    
     permission_classes=[AllowAny]
 
     def post(self, request):
@@ -108,8 +159,8 @@ class UserLogin(APIView):
             # 'level_id': level_data,
             # 'sector_id': sector_data
         }
-
         return Response(response_data, status=status.HTTP_200_OK)
+      
         
 class Logout(APIView):
     permission_classes=[AllowAny]
@@ -129,24 +180,9 @@ class Logout(APIView):
 
         return Response({
             'message': 'logout succesfull'
-        }, status=status.HTTP_200_OK)
-    # def get(self, request):
-    #     print(request.user)
-    #     if request.user.is_authenticated:
-    #         # L'utilisateur est connecté
-    #         return Response({'message': 'Utilisateur connecté'})
-    #     else:
-    #         # L'utilisateur n'est pas connecté
-    #         return Response({'message': 'Utilisateur non connecté'})
+        }, status=status.HTTP_200_OK)   
+  
 
 
-
-
-# class RelatedReadUser(viewsets.ViewSet):
-#     @action(detail=False,methods=["get"],url_path='sector-read/(?P<id_user>w+)')  
-#     def sector_read(self,request, id_user):
-#         queryset = Sector.objects.filter(user=id_user)
-#         data = list(queryset.value())
-
-#         return JsonResponse({'data':data,'status':status.HTTP_200_OK},safe=False,)
+  
 

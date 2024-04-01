@@ -59,7 +59,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-class MarchantSerializer(serializers.ModelSerializer):
+class MarchandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marchand
         fields = ('__all__')

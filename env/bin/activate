@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/lavue/web/python Web/Project Django/Powerk-soft/e-commerce-backend/env"
+VIRTUAL_ENV="/home/lavue/Web/Python/Django/Powerk-soft/e-commerce-backend/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

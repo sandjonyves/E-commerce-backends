@@ -8,7 +8,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/home/lavue/web/python Web/Project Django/Powerk-soft/e-commerce-backend/env"
+setenv VIRTUAL_ENV "/home/lavue/Web/Python/Django/Powerk-soft/e-commerce-backend/env"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"

@@ -16,48 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
     # user_type = serializers.IntegerField(write_only = True)
     class Meta:
         model = CustomUser
-        fields = '__all__'
-    def create(self, validated_data):
-        """
-        Create and save a new user with the given validated data.
-        """
-        role = validated_data.pop('role')
-        password = validated_data.pop('password')
-
-        if role == CustomUser.Role.ADMIN:
-            user = Admin.objects.create(
-                # The password must be hashed before saving it to the database.
-                password=make_password(password),
-                is_staff=True,
-                is_superuser=True,
-                **validated_data
-            )
-            if user is None:
-                raise ValueError('Unable to create user.')
-
-        elif role == CustomUser.Role.MARCHAND:
-            user = Marchand.objects.create(
-                password=make_password(password),
-                is_staff=True,
-                **validated_data
-            )
-            if user is None:
-                raise ValueError('Unable to create user.')
-            try:
-                group = Group.objects.get(name='marchandGourpPermission')
-            except Group.DoesNotExist:
-                group = group_permissionOfcathegorie_piece()
-            user.groups.add(group)
-
-        else:
-            user = Client.objects.create(
-                password=make_password(password),
-                **validated_data
-            )
-            if user is None:
-                raise ValueError('Unable to create user.')
-
-        return user
+        fields = ('firstName','lastName','email','password','role')
 
 class MarchandSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,7 +35,7 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 class UserLoginSerializer(TokenObtainPairSerializer):
-    username = serializers.CharField()
+    email = serializers.CharField()
     password = serializers.CharField()
 
 

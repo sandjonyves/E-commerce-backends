@@ -9,33 +9,39 @@ from account.models import Marchand
 
 class Cathegorie(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='Cathegorie/images/',null=True)
-    id_modele= models.ManyToManyField(Modele
+    thumbs  = models.ImageField(upload_to='Cathegorie/images/', blank=True)
+    id_modele= models.ManyToManyField(Modele,related_name='cathegories'
                                  )
-    
-
-class Piece(models.Model):
-    id_cathegorie =  models.ForeignKey(Cathegorie,on_delete=models.CASCADE,default="",blank=True,null=True)
-    name =models.CharField(max_length=255, )
-    price = models.FloatField(null=True)
-    qt_stock = models.IntegerField( null=True)
-    # brand = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='Pieces/images/', null=True)
-    city = models.CharField(max_length=255, null=True)
-    # type = models.CharField(max_length=255)
-    description = models.TextField(null=True )
-
-
     def __str__(self):
         return self.name
 
 
+class Piece(models.Model):
+    id_marchand = models.ForeignKey(Marchand,on_delete=models.CASCADE,blank=True,default=1,related_name='pieces')
+    id_cathegorie =  models.ForeignKey(Cathegorie,on_delete=models.CASCADE, blank=True,default=1,related_name='pieces')
+    name =models.CharField(max_length=255, )
+    price = models.FloatField( blank=True)
+    qt_stock = models.IntegerField(  blank=True)
+    # brand = models.CharField(max_length=255)
+    # thumbs = models.ImageField(upload_to='Pieces/images/', blank=True)
+    city = models.CharField(max_length=255,  blank=True,default='')
+    # type = models.CharField(max_length=255)
+    description = models.TextField( blank=True )
+
+class PieceImage(models.Model):
+    thumbs = models.ForeignKey(Piece,on_delete=models.CASCADE,blank=True,related_name='thumbs')
+    piece_image = models.ImageField(upload_to='Pieces/images/', blank=True)
+
+    def __str__(self):
+        return self.image_url
+
+
 class Commande(models.Model):
     # pk_comment  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    total_price = models.FloatField( null=True, default=0)
+    total_price = models.FloatField(  blank=True, default=0)
     commande_date = models.DateField(auto_now_add=True)
     Statut = models.BooleanField(default=False)
-    piece  = models.ManyToManyField(Piece,default=0,related_name = 'product_commande')
+    piece  = models.ManyToManyField(Piece,default=0,related_name = 'commandes')
 
 
 

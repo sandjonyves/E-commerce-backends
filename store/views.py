@@ -17,18 +17,20 @@ from .models import *
 
 
 class PierceViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     queryset = Piece.objects.all()
     serializer_class = PieceSerializer
-    @permission_classes([AllowAny])
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-    @permission_classes([AllowAny])
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
-    @permission_classes([AllowAny])
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+    # @permission_classes([AllowAny])
+    # def create(self, request, *args, **kwargs):
+    #     return super().create(request, *args, **kwargs)
+    # @permission_classes([AllowAny])
+    # def list(self, request, *args, **kwargs):
+    #     return super().list(request, *args, **kwargs)
+
+    # @permission_classes([AllowAny])
+    # def retrieve(self, request, *args, **kwargs):
+    #     return super().retrieve(request, *args, **kwargs)
     
     # permission_classes = [AllowAny]
     # @action(detail = False,methods=['get'],url_path = 'get_piece/(?P<id>\w+)')
@@ -39,12 +41,20 @@ class PierceViewSet(viewsets.ModelViewSet):
        
 
 class cathegorieViewSet(viewsets.ModelViewSet):
+
     queryset = Cathegorie.objects.all()
     serializer_class = CathegorieSerializer
-    @permission_classes([IsAdminUser])
+    permission_classes=[AllowAny]
+    # @permission_classes([IsAdminUser])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-
+    
+    # get all cathegorie of modele
+    @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)')
+    def read_all_Cathegorie_of_modele(self, request, modele_id):
+        queryset = Cathegorie.objects.filter(modele_id = modele_id)
+        data = list(queryset.values())
+        return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
     # @action(detail = False,methods=['get'],url_path = 'get_cathegorie/(?P<id>\w+)')
     # def get_cathegorie(self,request,id):
     #     queryset = Cathegorie.objects.filter(id_voiture=id)
@@ -102,15 +112,15 @@ class SearchModelCathegorie(APIView):
 
 
 
-class Read(APIView):
-    
-    @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)/')
-    def read_all_piece_of_cathegorie(self, request, modele_id):
+class Read(viewsets.ViewSet):
+    permission_classes=[AllowAny]
+    @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)')
+    def read_all_Cathegorie_of_modele(self, request, modele_id):
         queryset = Cathegorie.objects.filter(modele_id = modele_id)
         data = list(queryset.values())
-
         return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
-    @action(detail=False, methods=['GET'], url_path='all-piece-of-cathegorie/(?P<cathegorie_id>\w+)/')
+    
+    @action(detail=False, methods=['GET'], url_path='all-piece-of-cathegorie/(?P<cathegorie_id>\w+)')
     def read_all_piece_of_cathegorie(self, request, cathegorie_id):
         """
         Returns a list of all pieces of a specific cathegorie.
@@ -125,16 +135,23 @@ class Read(APIView):
 
         """
         queryset = Piece.objects.filter(id_cathegorie=cathegorie_id)
-        data = list(queryset.values())
+        serializer = PieceSerializer(queryset,many=True,context = {'request':request})
+        
+        return Response(serializer.data)
+    # @action(detail=False,methods = ['GET'],url_path='all-test-ue/(?P<ue_id>\w+)')
 
-        return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
-
-    @action(detail = False, methods=['GET'],url_path='all-commande-of-client/(?P<client_id>)')
+    @action(detail = False, methods=['GET'],url_path='all-commande-of-client/(?P<client_id>\w+)')
     def read_all_commande_of_client(self,request,client_id):
         queryset = Commande.objects.filter(client_id = client_id)
         data = list(queryset.values())
 
         return JsonResponse({'data': data,'status': status.HTTP_200_OK}, safe=False)
 
+
+    @action(detail=False,methods=['GET'],url_path = "piece-of-cathegorie/(?P<piece_id>\w+)/(?P<cathegorie_id>\w+)")
+    def piece_of_cathegorie(self,request,piece_id,cathegorie_id):
+        query = Piece.objects.filter(id=piece_id,id_cathegorie = cathegorie_id)
+        serializer = PieceSerializer(query,many=True, context= {"request":request})
+        return Response(serializer.data)
     # @action(detail=False, methods=['GET'], url_path='all-piece-of-commande/(?P<id_commande>\w+)/')
     # def read_all_cathegorie_of_piece(self, request, id_piece):

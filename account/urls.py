@@ -4,10 +4,10 @@ from rest_framework import routers
 
 route =routers.SimpleRouter()
 
-route.register('user',UserRegister,basename='user')
+route.register('register',UserRegister,basename='user')
 
 route.register('client',ClientUser,basename='client')
-route.register('marhand',MarchandUser,basename='marchand')
+route.register('marchand',MarchandUser,basename='marchand')
 route.register('admin',AdminUser,basename='admin')
 # route.register('marchand-register',MarchantREgister,basename='marchant')
 # route.register('admin-register',AdminREgister,basename='admin')

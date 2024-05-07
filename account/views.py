@@ -36,7 +36,7 @@ class PersonnalModelViewSet(
  #fonction de creation d'adminintrateur
 def createAdmin(validated_data):
     return Admin.objects.create(
-        id_admin = True,
+        is_superuser = True,
         is_staff = True,
         **validated_data
     )
@@ -53,7 +53,6 @@ def createMarchand(validated_data):
     except Group.DoesNotExist:
         group = group_permissionOfcathegorie_piece()
     marchand.groups.add(group)
-
     return Marchand
 
 #fontion de creation d'un client 
@@ -73,17 +72,19 @@ class UserRegister(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
 
     def create(self, request, *args, **kwargs):
-        serializers = self.get_serializer(request.data)
+        serializers = self.get_serializer(data=request.data)
         #verify if the data request is good 
+        print(request.data)
         if serializers.is_valid():
+        
             role = serializers.validated_data.get('role')
             password = serializers.validated_data.get('password')
             #hach the passeword of user 
             serializers.validated_data['password']  =  make_password(password)
             #create the user 
-            if role == Admin.role.ADMIN:
+            if role == Admin.Role.ADMIN:
                 user = createAdmin(serializers.validated_data)
-            elif role == Marchand.role.MARCHAND:
+            elif role == Marchand.Role.MARCHAND:
                 user = createMarchand(serializers.validated_data)
             else:
                 user = createClient(serializers.validated_data)
@@ -94,7 +95,7 @@ class UserRegister(viewsets.ModelViewSet):
             return Response({'message':'user create succesfuly'},status=status.HTTP_201_CREATED)
         
         else:
-            raise Response("data is not valid ",status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"data is not valid "},status=status.HTTP_400_BAD_REQUEST)
 
 
 class MarchandUser(PersonnalModelViewSet):
@@ -135,10 +136,10 @@ class UserLogin(APIView):
         Raises:
         ValidationError: If the provided credentials are invalid.
         """
-        username = request.data['username']
+        email = request.data['email']
         password = request.data['password']
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(email = email, password=password)
 
         if not user:
             raise serializers.ValidationError('data is not valid')
@@ -149,13 +150,15 @@ class UserLogin(APIView):
         token = RefreshToken.for_user(user)
         # level_data = LevelSerializer(user.level_id).data if user.level_id else None
         # sector_data = SectorSerializer(user.sector_id).data if user.sector_id else None
+        token['role'] = user.role
+        token['firstName'] = user.firstName
+        token['lastName']  = user.lastName
+        token['email']  = user.email
 
         response_data = {
             'refresh': str(token),
             'access': str(token.access_token),
-            'is_active': user.is_active,
-            'is_staff': user.is_staff,
-            'is_superuser': user.is_superuser,
+
             # 'level_id': level_data,
             # 'sector_id': sector_data
         }

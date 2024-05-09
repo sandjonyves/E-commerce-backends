@@ -185,6 +185,24 @@ SIMPLE_JWT = {
 }
 AUTH_USER_MODEL = 'account.CustomUser'
 
+
+
+# DONNEES REQUIS POUR ENVOYER LE MAIL
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sandjonyves@gmail.com'
+EMAIL_HOST_PASSWORD ='vetqafchhoodnzpl'
+# EMAIL_HOST_PASSWORD = 'wsfy/05/2004'
+EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'sandjonyves@gmail.com'
+# EMAIL_PORT = 587
+
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'sandjonyves@gmail.com'
+
 # AUTH_USER_MODEL = 'account.Marchand'
 
 # AUTH_USER_MODEL = 'account.Admin'

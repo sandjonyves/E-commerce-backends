@@ -19,6 +19,8 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from account.views import SendMail
+
 from rest_framework_swagger.views import get_swagger_view
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -44,8 +46,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
         path("app/",include("app.urls")),
-     
         path('store/',include('store.urls')),
+        path('send-mail/',SendMail.as_view(),name='send_mail'),
         # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
         # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
         # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),

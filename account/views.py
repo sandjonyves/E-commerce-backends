@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth import authenticate ,login,logout
+from django.core.mail import send_mail
 
 from .serializer import *
 from.models import *
@@ -79,8 +80,10 @@ class UserRegister(viewsets.ModelViewSet):
         
             role = serializers.validated_data.get('role')
             password = serializers.validated_data.get('password')
+            email = serializers.validated_data.get('email')
             #hach the passeword of user 
             serializers.validated_data['password']  =  make_password(password)
+
             #create the user 
             if role == Admin.Role.ADMIN:
                 user = createAdmin(serializers.validated_data)
@@ -92,7 +95,28 @@ class UserRegister(viewsets.ModelViewSet):
             if user is  None:
                 return Response({'message':'error this user can not create '},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             #return status to 201 if the user have be create succesfuli    
-            return Response({'message':'user create succesfuly'},status=status.HTTP_201_CREATED)
+
+            user = authenticate(email = email, password=password)
+            if not user:
+                raise serializers.ValidationError('data is not valid')
+            if not user.is_active:
+                raise serializers.ValidationError('user is not activated ')
+
+            login(request, user)
+            token = RefreshToken.for_user(user)
+            # level_data = LevelSerializer(user.level_id).data if user.level_id else None
+            # sector_data = SectorSerializer(user.sector_id).data if user.sector_id else None
+            token['role'] = user.role
+            token['firstName'] = user.firstName
+            token['lastName']  = user.lastName
+            token['email']  = user.email
+
+            response_data = {
+                'refresh': str(token),
+                'access': str(token.access_token),
+
+            }
+            return Response(response_data,{'message':'user create succesfuly'}, status=status.HTTP_200_OK)
         
         else:
             return Response({"message":"data is not valid "},status=status.HTTP_400_BAD_REQUEST)
@@ -188,4 +212,18 @@ class Logout(APIView):
 
 
   
+# fonction d'envoi des email
 
+class SendMail(APIView):
+
+    permission_classes =[AllowAny]
+    def post(self,request):
+        subjet = "constact de l'application de e-commerce"
+        message = request.data.get('message')
+        receive_mail= request.data.get('email')
+        name = request.data.get('fullName')
+        message = f'{name}\n\n {message}'
+
+        send_mail(subjet,message,'sandjonyves@gmail.com',(receive_mail,))
+
+        return Response({'message':'le message a ete envoyer avec succes '})

@@ -114,9 +114,10 @@ class UserRegister(viewsets.ModelViewSet):
             response_data = {
                 'refresh': str(token),
                 'access': str(token.access_token),
+                'message':'user create succesfuly'
 
             }
-            return Response(response_data,{'message':'user create succesfuly'}, status=status.HTTP_200_OK)
+            return Response(response_data, status=status.HTTP_200_OK)
         
         else:
             return Response({"message":"data is not valid "},status=status.HTTP_400_BAD_REQUEST)
@@ -166,9 +167,9 @@ class UserLogin(APIView):
         user = authenticate(email = email, password=password)
 
         if not user:
-            raise serializers.ValidationError('data is not valid')
+            return Response({"message":"data is not valid"})
         if not user.is_active:
-            raise serializers.ValidationError('user is not activated ')
+            return Response({"message":"User is not activate"})
 
         login(request, user)
         token = RefreshToken.for_user(user)
@@ -227,3 +228,5 @@ class SendMail(APIView):
         send_mail(subjet,message,'sandjonyves@gmail.com',(receive_mail,))
 
         return Response({'message':'le message a ete envoyer avec succes '})
+
+

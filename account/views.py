@@ -172,6 +172,7 @@ class UserLogin(APIView):
             return Response({"message":"User is not activate"})
 
         login(request, user)
+        
         token = RefreshToken.for_user(user)
         # level_data = LevelSerializer(user.level_id).data if user.level_id else None
         # sector_data = SectorSerializer(user.sector_id).data if user.sector_id else None

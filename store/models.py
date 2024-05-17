@@ -40,7 +40,7 @@ class PieceImage(models.Model):
 
 class Commande(models.Model):
     # pk_comment  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    client_id = models.ForeignKey(Client,on_delete=models.CASCADE,related_name='client_id')
+    client_id = models.ForeignKey(Client,on_delete=models.CASCADE,related_name='client_id',blank=True)
     total_price = models.FloatField(  blank=True, default=0)
     commande_date = models.DateField(auto_now_add=True)
     status = models.BooleanField(default=False)

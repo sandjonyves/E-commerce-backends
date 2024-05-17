@@ -23,7 +23,7 @@ class Piece(models.Model):
     qt_stock = models.IntegerField(  blank=True)
     # brand = models.CharField(max_length=255)
     # thumbs = models.ImageField(upload_to='Pieces/images/', blank=True)
-    city = models.CharField(max_length=255,  blank=True,default='yaounde')
+    city = models.CharField(max_length=255,default='yaounde')
     # type = models.CharField(max_length=255)
     description = models.TextField( blank=True )
 

@@ -167,9 +167,9 @@ class UserLogin(APIView):
         user = authenticate(email = email, password=password)
 
         if not user:
-            return Response({"message":"data is not valid"})
+            return Response({"message":"data is not valid"},status=status.HTTP_400_BAD_REQUEST)
         if not user.is_active:
-            return Response({"message":"User is not activate"})
+            return Response({"message":"User is not activate"},status=status.HTTP_400_BAD_REQUEST)
 
         login(request, user)
         

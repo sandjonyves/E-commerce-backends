@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+import json
 
 class PieceImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,20 +10,27 @@ class PieceImageSerializer(serializers.ModelSerializer):
 class PieceSerializer(serializers.ModelSerializer):
     thumbs = PieceImageSerializer(many=True,read_only=True)
     # thumbs = serializers.SerializerMethodField()
-    images= serializers.ListField(
-                child = serializers.ImageField(max_length =1000000,allow_empty_file=False,
-                                              use_url = False),
-                                               write_only=True
-                                               )                               
+    # images= serializers.ListField(
+    #             child = serializers.ImageField(max_length =1000000,allow_empty_file=False,
+    #                                           use_url = False),
+    #                                            write_only=True
+    #                                            )    
+    images = serializers.ListField( 
+                                    child = serializers.CharField(),
+                                    max_length =255,
+                                    write_only=True)  
+                             
     class Meta:
         model = Piece
         fields =('id','id_marchand','id_cathegorie','name','price','qt_stock','description','images','thumbs')
     def create(self, validated_data):
         piece_images = validated_data.pop('images')
+
         piece = Piece.objects.create(**validated_data)
 
         for piece_image in piece_images:
-            PieceImage.objects.create(thumbs=piece,piece_image=piece_image.url,public_id=piece_image.public_id)
+            image = json.loads(piece_image)
+            PieceImage.objects.create(thumbs=piece,image_url=image['url'],public_id=image['public_id'])
 
         return piece
 

@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
     # user_type = serializers.IntegerField(write_only = True)
     class Meta:
         model = CustomUser
-        fields = ('firstName','lastName','email','password','role')
+        fields = ('firstName','lastName','email','phone_number','password','role')
 
 class MarchandSerializer(serializers.ModelSerializer):
     class Meta:

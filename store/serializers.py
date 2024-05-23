@@ -22,7 +22,7 @@ class PieceSerializer(serializers.ModelSerializer):
                              
     class Meta:
         model = Piece
-        fields =('id','id_marchand','id_cathegorie','marque','modole','name','price','qt_stock','description','piece_images','thumbs')
+        fields =('id','id_marchand','id_cathegorie','id_marque','modele','name','price','qt_stock','description','images','thumbs')
     def create(self, validated_data):
         piece_images = validated_data.pop('images')
 

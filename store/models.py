@@ -4,8 +4,7 @@ from app.models import  *
 from django.dispatch import receiver
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission,Group
-from account.models import Marchand
-# Create your models here.
+from account.models import Marchand,Client
 
 class Cathegorie(models.Model):
     name = models.CharField(max_length=255)
@@ -26,13 +25,16 @@ class Piece(models.Model):
     qt_stock = models.IntegerField(  blank=True)
     # brand = models.CharField(max_length=255)
     # thumbs = models.ImageField(upload_to='Pieces/images/', blank=True)
-    city = models.CharField(max_length=255,  blank=True,default='')
+    city = models.CharField(max_length=255,default='yaounde')
     # type = models.CharField(max_length=255)
     description = models.TextField( blank=True )
 
 class PieceImage(models.Model):
     thumbs = models.ForeignKey(Piece,on_delete=models.CASCADE,blank=True,related_name='thumbs')
-    piece_image = models.ImageField(upload_to='Pieces/images/', blank=True)
+    piece_image = models.ImageField(upload_to='Pieces/images/', blank=True,default='')
+    image_url = models.CharField(max_length=255,blank = True, default='')
+    public_id = models.CharField(max_length=255,blank= True ,default = '')
+    
 
     def __str__(self):
         return self.image_url
@@ -40,9 +42,10 @@ class PieceImage(models.Model):
 
 class Commande(models.Model):
     # pk_comment  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client_id = models.ForeignKey(Client,on_delete=models.CASCADE,related_name='client_id',blank=True)
     total_price = models.FloatField(  blank=True, default=0)
     commande_date = models.DateField(auto_now_add=True)
-    Statut = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)
     piece  = models.ManyToManyField(Piece,default=0,related_name = 'commandes')
 
 

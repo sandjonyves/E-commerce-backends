@@ -6,6 +6,7 @@ route =routers.SimpleRouter()
 
 route.register('register',UserRegister,basename='user')
 
+
 route.register('client',ClientUser,basename='client')
 route.register('marchand',MarchandUser,basename='marchand')
 route.register('admin',AdminUser,basename='admin')
@@ -19,6 +20,7 @@ urlpatterns =[
     # path('user/client/',ClientUser.as_view(),name='user'),
     
     # path('client',ClientUser.as_view(),name='client'  ),
+
     path('login',UserLogin.as_view(),name='login'),
     path('logout',Logout.as_view(),name='logout'),
 ]

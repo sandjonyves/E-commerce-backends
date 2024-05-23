@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser,AllowAny
-
+# from rest_framework.parsers import MultiPartParser
 
 from .serializers import *
 from .models import *
@@ -20,6 +20,7 @@ class PierceViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Piece.objects.all()
     serializer_class = PieceSerializer
+    # parser_classes = [MultiPartParser]
 
     # @permission_classes([AllowAny])
     # def create(self, request, *args, **kwargs):

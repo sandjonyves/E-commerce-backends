@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import *
+from store.models import *
+from app.serializer import MarqueSerializer
 import json
 
 class PieceImageSerializer(serializers.ModelSerializer):
@@ -18,11 +19,13 @@ class PieceSerializer(serializers.ModelSerializer):
     images = serializers.ListField( 
                                     child = serializers.CharField(),
                                     max_length =255,
-                                    write_only=True)  
+                                    write_only=True)
+    
+    marque = MarqueSerializer(source='id_marque', read_only=True)
                              
     class Meta:
         model = Piece
-        fields =('id','id_marchand','id_cathegorie','id_marque','modele','name','price','qt_stock','description','images','thumbs')
+        fields =('id','id_marchand','id_cathegorie','id_marque','marque','modele','name','price','qt_stock','city','description','images','thumbs')
     def create(self, validated_data):
         piece_images = validated_data.pop('images')
 
@@ -34,7 +37,14 @@ class PieceSerializer(serializers.ModelSerializer):
 
         return piece
 
+    # def get_marque(self,validate_data):
+
+    #     id_marque = validate_data['id_marque']
+    #     queryset = Marque.objects.get(id = id_marque)
+    #     return MarqueSerializer(queryset).data
+    
     def get_thumbs(self,instace):
+
         queryset = instace.pieceImage.all()
         request = self.context.get('request')
         serializers = PieceImageSerializer(queryset,context={'request':request})

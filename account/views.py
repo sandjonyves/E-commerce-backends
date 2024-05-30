@@ -193,24 +193,22 @@ class UserLogin(APIView):
         
 class Logout(APIView):
     permission_classes=[AllowAny]
-
-    def post(self, request):
-        """
-        Logs out the currently authenticated user.
-
-        Parameters:
-            request (HttpRequest): The incoming request.
-
-        Returns:
-            Response: A JSON response with a message indicating that the user was successfully logged out.
-        """
-        print(request.user)
+class Logout(APIView):
+    permission_classes=[AllowAny]
+    def post(self, request,id):
+        user = CustomUser.objects.get(id=id)
+        request.user = user
+        # print(request.user)
         logout(request)
+        if not request.user.is_authenticated:
 
-        return Response({
+            return Response({
             'message': 'logout succesfull'
-        }, status=status.HTTP_200_OK)   
-  
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+            'message': 'logout failed'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
   

@@ -180,6 +180,7 @@ class UserLogin(APIView):
         token['firstName'] = user.firstName
         token['lastName']  = user.lastName
         token['email']  = user.email
+        token['phone_number'] = user.phone_number
 
         response_data = {
             'refresh': str(token),

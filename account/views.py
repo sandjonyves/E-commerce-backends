@@ -111,6 +111,7 @@ class UserRegister(viewsets.ModelViewSet):
             token['lastName']  = user.lastName
             token['email']  = user.email
             token['phone_number'] = user.phone_number
+            token['password'] = user.password
 
             response_data = {
                 'refresh': str(token),
@@ -182,13 +183,14 @@ class UserLogin(APIView):
         token['lastName']  = user.lastName
         token['email']  = user.email
         token['phone_number'] = user.phone_number
+        token['password'] = user.password
+
 
         response_data = {
             'refresh': str(token),
             'access': str(token.access_token),
 
-            # 'level_id': level_data,
-            # 'sector_id': sector_data
+            
         }
         return Response(response_data, status=status.HTTP_200_OK)
       
@@ -198,7 +200,7 @@ class UserLogin(APIView):
 class Logout(APIView):
     permission_classes=[AllowAny]
     def post(self, request,id):
-        user = CustomUser.objects.get(id=id)
+        user =  CustomUser.objects.filter(id=id).first
         request.user = user
         # print(request.user)
         logout(request)
@@ -210,9 +212,7 @@ class Logout(APIView):
         else:
             return Response({
             'message': 'logout failed'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-
+            })
   
 # fonction d'envoi des email
 

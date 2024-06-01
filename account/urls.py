@@ -22,5 +22,5 @@ urlpatterns =[
     # path('client',ClientUser.as_view(),name='client'  ),
 
     path('login',UserLogin.as_view(),name='login'),
-    path('logout',Logout.as_view(),name='logout'),
+    path('logout/<id>',Logout.as_view(),name='logout'),
 ]

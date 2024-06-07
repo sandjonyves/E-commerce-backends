@@ -46,6 +46,8 @@ class Commande(models.Model):
     total_price = models.FloatField(  blank=True, default=0)
     commande_date = models.DateField(auto_now_add=True)
     status = models.BooleanField(default=False)
+    operator = models.CharField(max_length = 256)
+    trasaction_id = models.CharField(max_length=256)
     piece  = models.ManyToManyField(Piece,default=0,related_name = 'commandes')
 
 

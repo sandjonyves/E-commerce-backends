@@ -156,3 +156,9 @@ class Read(viewsets.ViewSet):
         return Response(serializer.data)
     # @action(detail=False, methods=['GET'], url_path='all-piece-of-commande/(?P<id_commande>\w+)/')
     # def read_all_cathegorie_of_piece(self, request, id_piece):
+    @action(detail= False,methods = ['GET'],url_path='all-piece-of-merchant/(?P<merchant_id>\w+)')
+    def piece_of_merchant(self,request,merchant_id):
+        query = Piece.objects.filter(id_marchand =merchant_id)
+        serializer = PieceSerializer(query,many=True)
+
+        return Response(serializer.data)

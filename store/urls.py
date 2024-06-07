@@ -15,6 +15,7 @@ urlpatterns=[
     # path('test2/<int:pk>/',PierceViewSet.as_view({'patch':'update'})),
     path('',include(router.urls)),
     path('read-all-cathegorie-of-model/<id>',SearchModelCathegorie.as_view(),name='seach-cathegorie-of-model')
+    # path('all-piece-of-merchant/<merchant_id>',all_pie)
     
 
     # path('get_cathegorie/<int:id>',cathegorieViewSet.as_view({'get':'get_cathegorie'})),

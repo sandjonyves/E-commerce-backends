@@ -106,6 +106,7 @@ class UserRegister(viewsets.ModelViewSet):
             token = RefreshToken.for_user(user)
             # level_data = LevelSerializer(user.level_id).data if user.level_id else None
             # sector_data = SectorSerializer(user.sector_id).data if user.sector_id else None
+            token['id'] = user.id
             token['role'] = user.role
             token['firstName'] = user.firstName
             token['lastName']  = user.lastName
@@ -114,6 +115,7 @@ class UserRegister(viewsets.ModelViewSet):
             token['password'] = user.password
 
             response_data = {
+                'id':user.id
                 'refresh': str(token),
                 'access': str(token.access_token),
                 'message':'user create succesfuly'
@@ -187,10 +189,10 @@ class UserLogin(APIView):
 
 
         response_data = {
+            'id':user.id
             'refresh': str(token),
             'access': str(token.access_token),
-
-            
+             'message':'user login succesfuly'
         }
         return Response(response_data, status=status.HTTP_200_OK)
       

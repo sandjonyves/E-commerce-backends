@@ -120,10 +120,11 @@ class Admin(CustomUser):
         self.role = CustomUser.Role.ADMIN
       return super().save(*args,**kwargs)
 
+
 class OtherClient(models.Model):
   firstName = models.CharField(max_length  = 256)
   lastName = models.CharField(max_length  = 256)
-  email = models.CharField(max_length = 256,unique=True)
+  email = models.CharField(max_length = 256)
   phone_number = models.CharField(max_length = 256)
 
   REQUIRED_FIELDS =['firstName','lastName','email','phone_number']

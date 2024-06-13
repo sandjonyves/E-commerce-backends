@@ -147,7 +147,7 @@ class ClientUser(
 
 class OtherClientView(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
-    model = OtherClientSerializer
+    serializer_class = OtherClientSerializer
     queryset =  OtherClient.objects.all()
 
 

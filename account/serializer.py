@@ -54,12 +54,17 @@ class OtherClientSerializer(serializers.ModelSerializer):
 
     def create(self,validated_data):
         email = validated_data['email']
-        try:
-            other_client = OtherClient.objects.filter('email').first()
-            serializers = OtherClientSerializer(other_client,many = True)
-            return Response(serializers.data)
-        except:
-            return OtherClient.objects.create(**validated_data)
+        # print(email)
+        other_client,created = OtherClient.objects.get_or_create(email=email,defaults = validated_data)
+        print(other_client)
+        if ( not created):
+            return other_client
+        else:
+            return other_client
+        
+           
+
+          
 
     # def validate(self, request):
     #     print(request)

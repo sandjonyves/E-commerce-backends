@@ -55,11 +55,9 @@ class OtherClientSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         email = validated_data['email']
         try:
-            other_client = OtherClient.objects.filter('email').first
-            return Response({
-                "message":"this client exist"
-
-            } ,status=HTTP_404_NOT_FOUND)
+            other_client = OtherClient.objects.filter('email').first()
+            serializers = OtherClientSerializer(other_client,many = True)
+            return Response(serializers.data)
         except:
             return OtherClient.objects.create(**validated_data)
 

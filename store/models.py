@@ -49,6 +49,7 @@ class Commande(models.Model):
     operator = models.CharField(max_length = 256)
     transaction_id = models.CharField(max_length=256)
     piece  = models.ManyToManyField(Piece,default=0,related_name = 'commandes')
+    piece_qte = models.CharField(max_length=256)
 
 
 

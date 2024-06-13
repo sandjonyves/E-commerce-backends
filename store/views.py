@@ -63,6 +63,7 @@ class cathegorieViewSet(viewsets.ModelViewSet):
     #     return JsonResponse(data,safe=False)
        
 class CommandeViewSet(viewsets.ModelViewSet):
+    permission_classes=[AllowAny]
     serializer_class = CommandeSerializer
     queryset = Commande.objects.all()
 

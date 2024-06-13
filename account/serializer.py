@@ -11,6 +11,9 @@ from .permissions import group_permissionOfcathegorie_piece
 from .models import *
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from store.serializers import CommandeSerializer
+
 #serializeur du client
 class UserSerializer(serializers.ModelSerializer):
     # user_type = serializers.IntegerField(write_only = True)
@@ -39,9 +42,14 @@ class UserLoginSerializer(TokenObtainPairSerializer):
     password = serializers.CharField()
 
 
+class OtherClientSerializer(serializers.ModelSerializer):
 
-
-
+    commande  = CommandeSerializer(read_only=True )
+    class Meta:
+        models = OtherClient
+        fields = ('id','name','email','phone_number','commande')
+        
+  
     # def validate(self, request):
     #     print(request)
     #     username = request.get('username')
@@ -63,3 +71,4 @@ class UserLoginSerializer(TokenObtainPairSerializer):
     #         'refresh': str(token),
     #         'access': str(token.access_token),
     #     }
+

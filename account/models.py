@@ -71,6 +71,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 class ClientManager(models.Manager):
    def get_queryset(self,*arg,**kwargs) -> models.QuerySet:
       return super().get_queryset(*arg,**kwargs).filter(role=CustomUser.Role.CLIENT)    
+
 #table des clients
 class Client(CustomUser):
   objects = ClientManager()
@@ -118,6 +119,12 @@ class Admin(CustomUser):
       if not self.pk:
         self.role = CustomUser.Role.ADMIN
       return super().save(*args,**kwargs)
+
+class OtherClient(models.Model):
+  name = models.CharField(max_length  = 256)
+  email = models.CharField(max_length = 256)
+  phone_number = models.CharField(max_length = 256)
+
 
 
 

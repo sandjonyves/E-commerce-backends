@@ -4,7 +4,7 @@ from app.models import  *
 from django.dispatch import receiver
 from django.db.models.signals import post_migrate
 from django.contrib.auth.models import Permission,Group
-from account.models import Marchand,Client
+from account.models import Marchand,OtherClient
 
 class Cathegorie(models.Model):
     name = models.CharField(max_length=255)
@@ -15,7 +15,7 @@ class Cathegorie(models.Model):
         return self.name
 
 
-class Piece(models.Model):
+class  Piece(models.Model):
     id_marchand = models.ForeignKey(Marchand,on_delete=models.CASCADE,blank=True,default=1,related_name='pieces')
     id_cathegorie =  models.ForeignKey(Cathegorie,on_delete=models.CASCADE, blank=True,default=1,related_name='pieces')
     id_marque = models.ForeignKey(Marque,on_delete=models.CASCADE,related_name='marque',default=1,null=True,)
@@ -42,12 +42,12 @@ class PieceImage(models.Model):
 
 class Commande(models.Model):
     # pk_comment  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    client_id = models.ForeignKey(Client,on_delete=models.CASCADE,related_name='client_id',blank=True)
+    client_id = models.ForeignKey(OtherClient,on_delete=models.CASCADE,related_name='commande_id',blank=True)
     total_price = models.FloatField(  blank=True, default=0)
     commande_date = models.DateField(auto_now_add=True)
     status = models.BooleanField(default=False)
     operator = models.CharField(max_length = 256)
-    trasaction_id = models.CharField(max_length=256)
+    transaction_id = models.CharField(max_length=256)
     piece  = models.ManyToManyField(Piece,default=0,related_name = 'commandes')
 
 

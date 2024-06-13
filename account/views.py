@@ -145,7 +145,10 @@ class ClientUser(
     serializer_class = ClientSerializer
     queryset = Client.objects.all()
 
-   
+class OtherClientView(viewsets.ModelViewSet):
+    model = OtherClientSerializer
+    queryset =  OtherClient.objects.all()
+
 
 class UserLogin(APIView):
     serializer_class=UserLoginSerializer

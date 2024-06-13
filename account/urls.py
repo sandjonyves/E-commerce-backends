@@ -10,6 +10,7 @@ route.register('register',UserRegister,basename='user')
 route.register('client',ClientUser,basename='client')
 route.register('marchand',MarchandUser,basename='marchand')
 route.register('admin',AdminUser,basename='admin')
+route.register('otherClient',OtherClientView,basename = 'other-client')
 # route.register('marchand-register',MarchantREgister,basename='marchant')
 # route.register('admin-register',AdminREgister,basename='admin')
 

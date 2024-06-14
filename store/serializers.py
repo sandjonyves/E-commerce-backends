@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from store.models import *
 from app.serializer import MarqueSerializer
+from account.serializer import OtherClientSerializer
 import json
 
 class PieceImageSerializer(serializers.ModelSerializer):
@@ -71,15 +72,35 @@ class CathegorieSerializer(serializers.ModelSerializer):
         return serializers.data
     
 class CommandeSerializer(serializers.ModelSerializer):
-    # piece = PieceSerializer (many = True)
-    # multiple_piece_commande = serializers.ListField(
-    #     child = PieceSerializer(many = True),
-    #     write_only = True 
-    # )
+
+    client =OtherClientSerializer(source="client_id",read_only=True)
+    pieces =serializers.SerializerMethodField()
+
     class Meta:
         model = Commande
-        fields ='__all__'
+        fields =(
+                'total_price',
+                 'commande_date',
+                 'status',
+                 'operator',
+                 'transaction_id',
+                 'piece',
+                 'client_id',
+                 'piece_qte',
+                 'client',
+                 'pieces'
+                )
 
+    # def get_client(self,instance):
+    #     queryset = instance.client_id.get()
+    #     request= self.context.get('request')
+    #     serializers = OtherClientSerializer(queryset,many=True,context = {'request':request})
+    #     return serializers.data
+    def get_pieces(self,instance):
+        queryset = instance.piece.all()
+        request= self.context.get('request')
+        serializers = PieceSerializer(queryset,many=True,context = {'request':request})
+        return serializers.data
     # def create(self, validated_data):
     #     multiple_piece_commande = validated_data.pop('multiple_piece_commande')
     #     commande = Commande.objects.create(**validated_data)

@@ -15,7 +15,7 @@ from .models import *
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from store.serializers import CommandeSerializer
+# from store.serializers import CommandeSerializer
 
 #serializeur du client
 class UserSerializer(serializers.ModelSerializer):
@@ -47,10 +47,10 @@ class UserLoginSerializer(TokenObtainPairSerializer):
 
 class OtherClientSerializer(serializers.ModelSerializer):
 
-    commandes  = CommandeSerializer(read_only=True )
+    # commandes  = CommandeSerializer(read_only=True )
     class Meta:
         model = OtherClient
-        fields = ('id','firstName','lastName','email','phone_number','commandes')
+        fields = ('id','firstName','lastName','email','phone_number')
 
     def create(self,validated_data):
         email = validated_data['email']

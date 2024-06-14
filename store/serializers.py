@@ -79,6 +79,7 @@ class CommandeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commande
         fields =(
+                'id',
                 'total_price',
                  'commande_date',
                  'status',

@@ -12,6 +12,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser,AllowAny
 # from rest_framework.parsers import MultiPartParser
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .serializers import *
 from .models import *
 
@@ -51,16 +53,16 @@ class cathegorieViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
     
     # get all cathegorie of modele
-    @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)')
-    def read_all_Cathegorie_of_modele(self, request, modele_id):
-        queryset = Cathegorie.objects.filter(modele_id = modele_id)
-        data = list(queryset.values())
-        return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
-    # @action(detail = False,methods=['get'],url_path = 'get_cathegorie/(?P<id>\w+)')
-    # def get_cathegorie(self,request,id):
-    #     queryset = Cathegorie.objects.filter(id_voiture=id)
+    # @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)')
+    # def read_all_Cathegorie_of_modele(self, request, modele_id):
+    #     queryset = Cathegorie.objects.filter(modele_id = modele_id)
     #     data = list(queryset.values())
-    #     return JsonResponse(data,safe=False)
+    #     return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
+    # # @action(detail = False,methods=['get'],url_path = 'get_cathegorie/(?P<id>\w+)')
+    # # def get_cathegorie(self,request,id):
+    # #     queryset = Cathegorie.objects.filter(id_voiture=id)
+    # #     data = list(queryset.values())
+    # #     return JsonResponse(data,safe=False)
        
 class CommandeViewSet(viewsets.ModelViewSet):
     permission_classes=[AllowAny]
@@ -105,22 +107,22 @@ class lists(generics.ListAPIView):
 #     return update(request=request, pk=pk, obj=Piece, obj_serializer=PieceSerializer)
     
 
-class SearchModelCathegorie(APIView):
-    def get(self,request,id):
-        queryset = Cathegorie.objects.filter(id_modele=id)
-        data = list(queryset.values())
+# class SearchModelCathegorie(APIView):
+#     def get(self,request,id):
+#         queryset = Cathegorie.objects.filter(id_modele=id)
+#         data = list(queryset.values())
         
-        return JsonResponse(data,safe=False)
+#         return JsonResponse(data,safe=False)
 
 
 
 class Read(viewsets.ViewSet):
     permission_classes=[AllowAny]
-    @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)')
-    def read_all_Cathegorie_of_modele(self, request, modele_id):
-        queryset = Cathegorie.objects.filter(modele_id = modele_id)
-        data = list(queryset.values())
-        return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
+    # @action(detail=False, methods=['GET'], url_path='all-cathegorie-of-modele/(?P<model_id>\w+)')
+    # def read_all_Cathegorie_of_modele(self, request, modele_id):
+    #     queryset = Cathegorie.objects.filter(modele_id = modele_id)
+    #     data = list(queryset.values())
+    #     return JsonResponse({'data': data, 'status': status.HTTP_200_OK}, safe=False)
     
     @action(detail=False, methods=['GET'], url_path='all-piece-of-cathegorie/(?P<cathegorie_id>\w+)')
     def read_all_piece_of_cathegorie(self, request, cathegorie_id):

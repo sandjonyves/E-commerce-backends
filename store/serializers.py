@@ -56,7 +56,7 @@ class CathegorieSerializer(serializers.ModelSerializer):
     pieces =serializers.SerializerMethodField()
     class Meta:
         model = Cathegorie
-        fields = ('id','name','thumbs','id_modele','pieces')
+        fields = ('id','name','thumbs','pieces')
 
     def create(self, validated_data):
         

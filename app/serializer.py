@@ -7,10 +7,10 @@ class MarqueSerializer(serializers.ModelSerializer):
         model = Marque
         fields = '__all__' 
 
-class ModeleSrializer(serializers.ModelSerializer):
-    class Meta:
-        model= Modele
-        fields = '__all__'
+# class ModeleSrializer(serializers.ModelSerializer):
+#     class Meta:
+#         model= Modele
+#         fields = '__all__'
 
 # class VoitureSerializer(serializers.ModelSerializer):
 #     class Meta:

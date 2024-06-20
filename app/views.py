@@ -19,30 +19,30 @@ class MarqueViewSet(viewsets.ModelViewSet):
     serializer_class= MarqueSerializer
 
 
-class ModeleViewSet(viewsets.ModelViewSet):
+# class ModeleViewSet(viewsets.ModelViewSet):
 
-    permission_classes = [AllowAny]
-    queryset = Modele.objects.all()
-    serializer_class= ModeleSrializer
+#     permission_classes = [AllowAny]
+#     queryset = Modele.objects.all()
+#     serializer_class= ModeleSrializer
     
-    @action(detail=False,methods=['get'],url_path='all-modele-of-marque/(?P<marque_id>\w+)')
-    def get_all_modele_marque(self,request,marque_id):
-        #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
-        queryset = Modele.objects.filter(id_marque__id = marque_id)
-        #transformation sous forme de liste et renommager de certains champs
-        data  = list(queryset.values('id','name',marque_name =  F('id_marque__name')))
-        #retour des donnees  sous forme de Json
-        return JsonResponse(data,safe=False)
+#     @action(detail=False,methods=['get'],url_path='all-modele-of-marque/(?P<marque_id>\w+)')
+#     def get_all_modele_marque(self,request,marque_id):
+#         #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
+#         queryset = Modele.objects.filter(id_marque__id = marque_id)
+#         #transformation sous forme de liste et renommager de certains champs
+#         data  = list(queryset.values('id','name',marque_name =  F('id_marque__name')))
+#         #retour des donnees  sous forme de Json
+#         return JsonResponse(data,safe=False)
 
-class SearchModeleMarque(APIView):
-    @action(detail=False,methods=['get'],url_path='all-modele-of-marque')
-    def get_all_modele_marque(self,request,marque_id):
-        #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
-        queryset = Modele.objects.filter(id_marque__id = marque_id)
-        #transformation sous forme de liste et renommager de certains champs
-        data  = list(queryset.values('id','name',marque_name =  F('id_marque__name')))
-        #retour des donnees  sous forme de Json
-        return JsonResponse(data,safe=False)
+# class SearchModeleMarque(APIView):
+#     @action(detail=False,methods=['get'],url_path='all-modele-of-marque')
+#     def get_all_modele_marque(self,request,marque_id):
+#         #joiture entre les trois tables voiture modele et marque en fonction de leurs ID
+#         queryset = Modele.objects.filter(id_marque__id = marque_id)
+#         #transformation sous forme de liste et renommager de certains champs
+#         data  = list(queryset.values('id','name',marque_name =  F('id_marque__name')))
+#         #retour des donnees  sous forme de Json
+#         return JsonResponse(data,safe=False)
     # queryset = Voiture.objects.all()
     # serializer_class = VoitureSerializer
     #affichage de tous les marques des voitures 

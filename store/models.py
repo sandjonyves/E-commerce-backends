@@ -9,8 +9,8 @@ from account.models import Marchand,OtherClient
 class Cathegorie(models.Model):
     name = models.CharField(max_length=255)
     thumbs  = models.ImageField(upload_to='Cathegorie/images/', blank=True)
-    id_modele= models.ManyToManyField(Modele,related_name='cathegories'
-                                 )
+    # id_modele= models.ManyToManyField(Modele,related_name='cathegories'
+                                #  )
     def __str__(self):
         return self.name
 
@@ -42,7 +42,7 @@ class PieceImage(models.Model):
 
 class Commande(models.Model):
     # pk_comment  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    client_id = models.ForeignKey(OtherClient,on_delete=models.CASCADE,related_name='commande_id',blank=True)
+    client_id = models.ForeignKey(OtherClient,on_delete=models.CASCADE,related_name='commande',blank=True)
     total_price = models.FloatField(  blank=True, default=0)
     commande_date = models.DateField(auto_now_add=True)
     status = models.BooleanField(default=False)

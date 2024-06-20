@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAdminUser,AllowAny
 # from rest_framework.parsers import MultiPartParser
 
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 from .serializers import *
 from .models import *
@@ -29,9 +30,10 @@ class CommandeSearch(generics.ListAPIView):
 
 
 class PieceSearch(generics.ListAPIView):
-    permission_class =[AllowAny]
+    permission_classes = [AllowAny]
     queryset  = Piece.objects.all()
     serializer_class = PieceSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
     filterset_fields= ['name','modele','description','id_cathegorie__name','id_marque__name']
+    search_fields = ('name','modele','description','=id_cathegorie__name','=id_marque__name')
 

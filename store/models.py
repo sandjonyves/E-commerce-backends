@@ -18,7 +18,8 @@ class Cathegorie(models.Model):
 class  Piece(models.Model):
     id_marchand = models.ForeignKey(Marchand,on_delete=models.CASCADE,blank=True,default=1,related_name='pieces')
     id_cathegorie =  models.ForeignKey(Cathegorie,on_delete=models.CASCADE, blank=True,default=1,related_name='pieces')
-    id_marque = models.ForeignKey(Marque,on_delete=models.CASCADE,related_name='marque',default=1,null=True,)
+    # id_marque = models.ForeignKey(Marque,on_delete=models.CASCADE,related_name='marque',default=1,null=True,)
+    marque = models.CharField(max_length=256,default='',blank=True)
     modele = models.CharField(max_length=512,default='4x4')
     name =models.CharField(max_length=255)
     price = models.FloatField( blank=True)

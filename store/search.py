@@ -30,8 +30,8 @@ class CommandeSearch(generics.ListAPIView):
 
 class PieceSearch(generics.ListAPIView):
     permission_class =[AllowAny]
-    querytset  = Piece.objects.all()
-    serialiezer_class = PieceSerializer
+    queryset  = Piece.objects.all()
+    serializer_class = PieceSerializer
     filter_backends = [DjangoFilterBackend]
-    filtersert = ['name','modele','desrcition','id_cathegorie__name','id_marque__name']
+    filterset_fields= ['name','modele','description','id_cathegorie__name','id_marque__name']
 

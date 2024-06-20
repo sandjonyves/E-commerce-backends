@@ -46,7 +46,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
         path("app/",include("app.urls")),
-        path('store/',include('store.urls')),
+        path('store/', include('store.urls')),
         path('send-mail/',SendMail.as_view(),name='send_mail'),
         # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
         # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

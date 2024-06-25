@@ -31,7 +31,7 @@ class  Piece(models.Model):
     description = models.TextField( blank=True )
 
 class PieceImage(models.Model):
-    thumbs = models.ForeignKey(Piece,on_delete=models.CASCADE,blank=True,related_name='thumbs')
+    piece_id = models.ForeignKey(Piece,on_delete=models.CASCADE,blank=True,related_name='thumbs')
     piece_image = models.ImageField(upload_to='Pieces/images/', blank=True,default='')
     image_url = models.CharField(max_length=255,blank = True, default='')
     public_id = models.CharField(max_length=255,blank= True ,default = '')

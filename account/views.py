@@ -231,7 +231,8 @@ class SendMail(APIView):
         receive_mail= request.data.get('email')
         name = request.data.get('fullName')
         message = f'{name}\n\n {message}'
-
+        if receive_mail =='':
+            return Response({'message':'please verify your informations '},status=status.HTTP_400_BAD_REQUEST)
         send_mail(subjet,message,'sandjonyves@gmail.com',(receive_mail,))
 
         return Response({'message':'le message a ete envoyer avec succes '})

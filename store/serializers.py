@@ -78,7 +78,8 @@ class PieceSerializer(serializers.ModelSerializer):
     images = serializers.ListField( 
                                     child = serializers.CharField(),
                                     max_length =255,
-                                    write_only=True)
+                                    # write_only=True,
+                                    read_only =True)
     
     # marque = MarqueSerializer(source='id_marque', read_only=True)     
     # category = CathegorieSerializer(source='id_cathegorie',read_only=True)                
@@ -101,12 +102,12 @@ class PieceSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         piece_images = validated_data.pop('images')
-
+        # print('piecesssssssssss',piece_images)
         piece = Piece.objects.create(**validated_data)
 
         for piece_image in piece_images:
             image = json.loads(piece_image)
-            PieceImage.objects.create(thumbs=piece,image_url=image['url'],public_id=image['public_id'])
+            PieceImage.objects.create(piece_id=piece,image_url=image['url'],public_id=image['public_id'])
 
         return piece
 

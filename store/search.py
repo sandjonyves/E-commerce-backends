@@ -34,6 +34,6 @@ class PieceSearch(generics.ListAPIView):
     queryset  = Piece.objects.all()
     serializer_class = PieceSerializer
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
-    filterset_fields= ['name','modele','description','id_cathegorie__name','id_marque__name']
-    search_fields = ('name','modele','description','=id_cathegorie__name','=id_marque__name')
+    filterset_fields= ['name','modele','description','id_cathegorie__name']
+    search_fields = ('name','modele','description','=id_cathegorie__name')
 
